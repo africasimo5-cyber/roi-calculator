@@ -10,8 +10,8 @@ const http = require('http');
 // ============= CONFIGURATION =============
 const CONFIG = {
   // Update this with your backend URL
-  backendUrl: 'http://127.0.0.1:5500/api/roi/submit',  // For local testing
-  // backendUrl: 'https://your-backend.herokuapp.com/api/roi/submit',  // For production
+  // backendUrl: 'http://127.0.0.1:5500/api/roi/submit',  // For local testing
+  backendUrl: 'https://roi-calculator-p5la.onrender.com/api/roi/submit',  // For production
   
   // Update with your test email
   testEmail: 'roi@ai1team.com'
