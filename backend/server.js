@@ -32,22 +32,9 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-/* // ============= MIDDLEWARE =============
+// ============= MIDDLEWARE =============
 app.use(cors({
   origin: ['http://127.0.0.1:5500', 'http://localhost:5500'],
-  credentials: true
-}));
-
-app.use(express.json()); */
-
-// ============= MIDDLEWARE =============
-// Use environment variable for allowed origins
-const allowedOrigins = process.env.ALLOWED_ORIGINS 
-  ? process.env.ALLOWED_ORIGINS.split(',') 
-  : ['https://roi-calculator-lime.vercel.app', 'https://roi-calculator-p5la.onrender.com'];
-
-app.use(cors({
-  origin: allowedOrigins,
   credentials: true
 }));
 
