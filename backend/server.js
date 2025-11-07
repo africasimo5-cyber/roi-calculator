@@ -44,7 +44,7 @@ app.use(express.json()); */
 // Use environment variable for allowed origins
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',') 
-  : ['http://127.0.0.1:5500', 'http://localhost:5500'];
+  : ['https://roi-calculator-lime.vercel.app', 'https://roi-calculator-p5la.onrender.com'];
 
 app.use(cors({
   origin: allowedOrigins,
