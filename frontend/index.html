@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI1team — ROI+ Kalkulator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="A1Favicon.png"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; margin:0; color:#111; background:#fff; }
+    header { display:flex; justify-content:space-between; align-items:center; padding:20px 32px; border-bottom:2px solid #f3f3f3; }
+    h1 { font-size:32px; color:#0b3d91; margin-bottom:8px; }
+    h2 { font-size:20px; color:#0b3d91; margin-top:24px; margin-bottom:12px; }
+    p.lead { font-size:18px; color:#333; margin-top:0; }
+    .wrap { max-width:960px; margin:40px auto; padding:0 16px; }
+    .btn { background:#d4af37; color:#fff; border:none; border-radius:6px; padding:12px 20px; font-weight:600; cursor:pointer; width:100%; font-size:16px; }
+    .btn:hover { background:#b38e1e; }
+    .btn:disabled { background:#ccc; cursor:not-allowed; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    input, select { width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; box-sizing:border-box; font-family: 'Inter', sans-serif; }
+    label { font-size:14px; font-weight:600; display:block; margin-bottom:6px; }
+    .card { border:1px solid #ddd; border-radius:10px; padding:20px; margin-top:24px; }
+    footer { text-align:center; margin:60px 0 24px; font-size:13px; color:#444; }
+    .results { margin-top:18px; padding:14px; border-radius:8px; background:#f0f7ff; border:1px solid #bdd7f5; }
+    .result-row { display:flex; justify-content:space-between; padding:6px 0; font-weight:600; color:#0b3d91; }
+    .small { font-weight:400; color:#333; font-size:14px; }
+    .muted { font-weight:400; color:#666; font-size:13px; }
+    .checkbox-wrapper { display:flex; align-items:start; gap:8px; margin-top:16px; }
+    .message { padding:12px; border-radius:6px; margin-top:12px; font-size:14px; }
+    .message.success { background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
+    .message.error { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
+    .health-score { font-size:24px; font-weight:700; color:#0b3d91; }
+    @media (max-width:720px) {
+      h1 { font-size:28px; text-align:center; }
+      p.lead { font-size:16px; text-align:center; }
+      .grid { grid-template-columns:1fr; }
+      header { flex-direction:column; gap:12px; align-items:center; }
+    }
+  </style>
+</head>
+<body>
+  <header><!-- 
+    <div class="logo" style="font-size:24px; font-weight:700; color:#0b3d91;">AI1team</div> -->
+    <img class="logo" src="ai1team-logo.png" alt="ai1team-logo" style="height:50px;">
+    <div class="logo-text" style="font-size:14px; color:#0b3d91;">AI rešenja za pametniji e-commerce</div>
+  </header>
+
+  <div class="wrap">
+    <section id="hero">
+      <h1>Koliko AI može smanjiti vaše zalihe?</h1>
+      <p class="lead">Unesite svoje brojke i za 30 sekundi saznajte potencijalnu godišnju uštedu i ROI+.</p>
+    </section>
+
+    <div class="card">
+      <h2>Podaci o kompaniji</h2>
+      <div class="grid">
+        <div>
+          <label>Naziv kompanije *</label>
+          <input id="company" required>
+        </div>
+        <div>
+          <label>Kontakt osoba *</label>
+          <input id="contact" required>
+        </div>
+        <div>
+          <label>Email *</label>
+          <input type="email" id="email" required>
+        </div>
+      </div>
+
+      <h2>Operativni podaci</h2>
+      <div class="grid">
+        <div>
+          <label>Godišnji prihod € *</label>
+          <input type="text" id="annualRevenue" required>
+        </div>
+        <div>
+          <label>Vrednost zaliha € *</label>
+          <input type="text" id="inventoryValue" required>
+        </div>
+        <div>
+          <label>Overstock % *</label>
+          <input type="number" id="overstockPct" min="0" max="100" step="0.01" required>
+        </div>
+        <div>
+          <label>Out-of-Stock % *</label>
+          <input type="number" id="oosPct" min="0" max="100" step="0.01" required>
+        </div>
+        <div>
+          <label>Broj artikala SKU *</label>
+          <input type="number" id="sku" min="0" step="1" required>
+        </div>
+        <div>
+          <label>Broj skladišta *</label>
+          <input type="number" id="warehouses" min="0" step="1" required>
+        </div>
+        <div>
+          <label>Broj prodajnih kanala *</label>
+          <input type="number" id="channels" min="0" step="1" required>
+        </div>
+        <div>
+          <label>Očekivana AI preciznost %</label>
+          <select id="accuracy">
+            <option value="70">70</option>
+            <option value="80">80</option>
+            <option value="85" selected>85</option>
+            <option value="90">90</option>
+            <option value="95">95</option>
+          </select>
+        </div>
+      </div>
+
+      <h2>Struktura troškova (%)</h2>
+      <div class="grid">
+        <div>
+          <label>COGS (Cost of Goods Sold) % *</label>
+          <input type="number" id="cogs" min="0" max="100" step="0.1" required>
+        </div>
+        <div>
+          <label>Marketing % *</label>
+          <input type="number" id="mkt" min="0" max="100" step="0.1" required>
+        </div>
+        <div>
+          <label>Logistics % *</label>
+          <input type="number" id="logi" min="0" max="100" step="0.1" required>
+        </div>
+        <div>
+          <label>Operations % *</label>
+          <input type="number" id="ops" min="0" max="100" step="0.1" required>
+        </div>
+      </div>
+
+      <div class="results" id="liveResults">
+        <div class="result-row">
+          <div class="muted">Health Score</div>
+          <div class="health-score" id="healthScoreDisplay">-</div>
+        </div>
+        <div class="result-row">
+          <div class="muted">Procena godišnje uštede</div>
+          <div id="aiSavingsDisplay">-</div>
+        </div>
+        <div class="result-row">
+          <div class="muted">Mesečna pretplata (procena)</div>
+          <div id="monthlyFeeDisplay">-</div>
+        </div>
+        <div class="result-row">
+          <div class="muted">Godišnja pretplata</div>
+          <div id="annualFeeDisplay">-</div>
+        </div>
+        <div class="result-row">
+          <div class="muted">Procena ROI</div>
+          <div id="roiDisplay">-</div>
+        </div>
+        <div style="margin-top:12px;" class="small">
+          Rezultati se ažuriraju dok menjate polja. PDF izveštaj će biti poslat na vašu email adresu.
+        </div>
+      </div>
+
+      <div class="checkbox-wrapper">
+        <div><input type="checkbox" id="gdpr" required> </div>
+        <label for="gdpr" class="small">Slažem se sa obradom podataka radi ROI procene i ponude (GDPR)</label>
+      </div>
+
+      <div style="margin-top:16px;">
+        <!-- <button type="button" class="btn" id="submitBtn" onclick="submitForm()">Izračunaj ROI+ i pošalji</button> -->
+         <button type="button" class="btn" id="submitBtn" onclick="submitForm(event)">Izračunaj ROI+ i pošalji</button>
+      </div>
+
+      <div id="messageBox" style="display:none;" class="message"></div>
+    </div>
+  </div>
+
+  <footer>
+    <div><img src="ai1team-logo.png" alt="ai1team-logo" style="height:40px; margin-bottom: 15px;"></div>
+    AI1team © 2025 — Beograd · <a href="mailto:roi@ai1team.com">roi@ai1team.com</a>
+  </footer>
+
+  <script>
+// ============= CONFIGURATION =============
+// IMPORTANT: Replace this with your actual backend URL
+const BACKEND_URL = 'http://localhost:3000/api/roi/submit';
+
+// ============= UTILITY FUNCTIONS =============
+function cleanNumber(value) {
+  if (typeof value === 'number') return value;
+  return parseFloat(String(value).replace(/\./g, '').replace(',', '.')) || 0;
+}
+
+function formatCurrency(value) {
+  return value.toLocaleString('de-DE');
+}
+
+function getElement(id) {
+  return document.getElementById(id);
+}
+
+function getValue(id) {
+  return getElement(id).value;
+}
+
+function getNumValue(id) {
+  return parseFloat(getValue(id)) || 0;
+}
+
+// ============= HEALTH SCORE CALCULATION =============
+function calculateHealthScore() {
+  const rev = cleanNumber(getValue('annualRevenue'));
+  const inv = cleanNumber(getValue('inventoryValue'));
+  const over = getNumValue('overstockPct');
+  const oos = getNumValue('oosPct');
+  const cogs = getNumValue('cogs');
+  const mkt = getNumValue('mkt');
+  const logi = getNumValue('logi');
+  const ops = getNumValue('ops');
+
+  if (rev === 0) return 0;
+
+  let score = 100;
+  
+  // Inventory-to-Revenue penalty
+  score -= Math.min(40, (inv / rev) * 140);
+  
+  // Overstock penalty
+  score -= Math.min(20, over * 0.9);
+  
+  // Out-of-stock penalty
+  score -= Math.min(15, oos * 1.0);
+  
+  // High cost structure penalties
+  const totalCosts = cogs + mkt + logi + ops;
+  if (totalCosts > 85) score -= 10;
+  if (totalCosts > 95) score -= 8;
+
+  // Clamp between 1 and 99
+  return Math.max(1, Math.min(99, Math.round(score)));
+}
+
+// ============= ROI CALCULATION =============
+function computeValues() {
+  const rev = cleanNumber(getValue('annualRevenue'));
+  const inv = cleanNumber(getValue('inventoryValue'));
+  const over = getNumValue('overstockPct');
+  const oos = getNumValue('oosPct');
+  const sku = getNumValue('sku');
+  const warehouses = getNumValue('warehouses');
+  const channels = getNumValue('channels');
+
+  // Original AI savings calculation
+  const overstockLoss = inv * (over / 100);
+  const oosLoss = rev * (oos / 100);
+  const aiSavings = (overstockLoss * 0.30) + (oosLoss * 0.40);
+
+  // Fee calculation
+  let fee = 1000 + (300 * warehouses) + (200 * channels) + (150 * (sku / 1000));
+  if (fee < 3000) fee = 3000;
+
+  const monthlyFee = Math.round(fee);
+  const annualFee = Math.round(fee * 12);
+  const roi = (aiSavings - annualFee) / annualFee;
+  const roiPercent = isFinite(roi) ? Math.round(roi * 10000) / 100 : 0;
+
+  // Health Score
+  const healthScore = calculateHealthScore();
+
+  return {
+    aiSavings: Math.round(aiSavings),
+    monthlyFee,
+    annualFee,
+    roiPercent,
+    healthScore
+  };
+}
+
+// ============= LIVE DISPLAY UPDATE =============
+function updateLiveDisplay() {
+  const vals = computeValues();
+  
+  getElement('healthScoreDisplay').textContent = vals.healthScore;
+  getElement('aiSavingsDisplay').textContent = formatCurrency(vals.aiSavings) + ' €';
+  getElement('monthlyFeeDisplay').textContent = formatCurrency(vals.monthlyFee) + ' €';
+  getElement('annualFeeDisplay').textContent = formatCurrency(vals.annualFee) + ' €';
+  getElement('roiDisplay').textContent = vals.roiPercent + ' %';
+}
+
+// ============= FORM SUBMISSION =============
+/* async function submitForm() { */
+  async function submitForm(event) {
+  event.preventDefault(); // 🚫 stop any page reload
+
+  // Validate required fields
+  const requiredFields = [
+    'company', 'contact', 'email',
+    'annualRevenue', 'inventoryValue', 'overstockPct', 'oosPct',
+    'sku', 'warehouses', 'channels',
+    'cogs', 'mkt', 'logi', 'ops'
+  ];
+
+  for (const field of requiredFields) {
+    const el = getElement(field);
+    if (!el.value || el.value.trim() === '') {
+      showMessage('Molimo popunite sva obavezna polja.', 'error');
+      el.focus();
+      return;
+    }
+  }
+
+  // Check GDPR consent
+  if (!getElement('gdpr').checked) {
+    showMessage('Morate prihvatiti GDPR uslove.', 'error');
+    return;
+  }
+
+  // Prepare data for backend
+  const submitData = {
+    name: getValue('contact').trim(),
+    company: getValue('company').trim(),
+    email: getValue('email').trim(),
+    rev: cleanNumber(getValue('annualRevenue')),
+    inv: cleanNumber(getValue('inventoryValue')),
+    sku: getNumValue('sku'),
+    oos: getNumValue('oosPct'),
+    over: getNumValue('overstockPct'),
+    cogs: getNumValue('cogs'),
+    mkt: getNumValue('mkt'),
+    logi: getNumValue('logi'),
+    ops: getNumValue('ops'),
+    warehouses: getNumValue('warehouses'),
+    channels: getNumValue('channels'),
+    accuracy: getNumValue('accuracy')
+  };
+
+  // Disable submit button
+  const btn = getElement('submitBtn');
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Šalje se...';
+
+  try {
+    const response = await fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(submitData)
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      showMessage('Uspešno! Vaš ROI+ izveštaj je poslat na vašu email adresu.', 'success');
+      
+      // Redirect after 2 seconds
+      setTimeout(() => {
+        window.location.href = 'https://ai1team.com/thankyou.html';
+      }, 2000);
+    } else {
+      const error = await response.json();
+      showMessage(`Greška: ${error.message || 'Pokušajte ponovo.'}`, 'error');
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
+  } catch (error) {
+    console.error('Submit error:', error);
+    showMessage('Greška u konekciji. Proverite internet i pokušajte ponovo.', 'error');
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+}
+
+function showMessage(text, type) {
+  const msgBox = getElement('messageBox');
+  msgBox.textContent = text;
+  msgBox.className = 'message ' + type;
+  msgBox.style.display = 'block';
+  
+  // Scroll to message
+  msgBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ============= EVENT LISTENERS =============
+// Currency formatting for revenue and inventory fields
+['annualRevenue', 'inventoryValue'].forEach(id => {
+  const el = getElement(id);
+  el.addEventListener('input', () => {
+    let value = el.value.replace(/\D/g, '');
+    if (value) {
+      const numberValue = parseFloat(value);
+      el.value = formatCurrency(numberValue);
+    } else {
+      el.value = '';
+    }
+    updateLiveDisplay();
+  });
+});
+
+// Update display on all input changes
+const inputIds = [
+  'overstockPct', 'oosPct', 'sku', 'warehouses', 'channels',
+  'cogs', 'mkt', 'logi', 'ops', 'accuracy'
+];
+
+inputIds.forEach(id => {
+  const el = getElement(id);
+  if (el) el.addEventListener('input', updateLiveDisplay);
+});
+
+// Initial display update
+updateLiveDisplay();
+</script>
+
+</body>
+</html>
