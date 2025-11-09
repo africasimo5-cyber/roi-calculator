@@ -8,12 +8,12 @@ const nodemailer = require('nodemailer');
 
 // ============= CONFIGURE YOUR EMAIL HERE =============
 const EMAIL_CONFIG = {
-  host: 'smtp.gmail.com',
+  host: 'smtp.sendgrid.net',
   port: 587,
   secure: false,
   auth: {
-    user: 'roi@ai1team.com',      // ← UPDATE THIS
-    pass: 'Qwerty55@.'          // ← UPDATE THIS
+    user: 'apikey',      // ← UPDATE THIS
+    pass: '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'          // ← UPDATE THIS
   }
 };
 
