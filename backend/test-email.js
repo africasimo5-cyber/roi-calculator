@@ -13,7 +13,7 @@ const EMAIL_CONFIG = {
   secure: false,
   auth: {
     user: 'apikey',      // ← UPDATE THIS
-    pass: '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'          // ← UPDATE THIS
+    pass: process.env.SENDGRID_API_KEY          // ← UPDATE THIS
   }
 };
 
